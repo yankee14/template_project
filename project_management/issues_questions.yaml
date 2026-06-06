@@ -1,0 +1,28 @@
+description: |
+  Current reality, not target behavior. Two lists.
+
+  open:     unresolved issues and questions, each dated when raised.
+  resolved: each collapsed to one terse line — statement → resolution, date.
+
+  Requirements (project_management/*.yaml) stay rev-agnostic; this file tracks
+  what is actually wrong or undecided right now.
+
+  ISSUE    = something built (hw/fw/sw/mechanical) does not work as intended, or
+             deviates from a requirement.
+  QUESTION = an open design/decision concern raised by the engineer or the agent
+             — the agent SHALL raise its own doubts here, not stay silent.
+
+  Governed by agent_workflow_scripts/requirements_issues_questions.md.
+
+# open entry schema:
+#   - id: ISSUE-NNN | Q-NNN
+#     raised: YYYY-MM-DD
+#     kind: issue | question
+#     title: one line
+#     detail: what is wrong / what is asked; affected ids
+#     refs: [optional requirement/DD ids, files]
+open: []
+
+# resolved: one line each, newest first:
+#   "YYYY-MM-DD ISSUE-NNN|Q-NNN: <statement> → <resolution>. (commit <hash>)"
+resolved: []

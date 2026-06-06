@@ -1,0 +1,28 @@
+description: |
+  Traceability matrix. The thin bridge between requirements
+  (firmware.yaml, hardware.yaml, …) and the design decisions that satisfy them
+  (DESIGN.md, DD-NNN). Each link names the requirement, the satisfying design
+  decision(s), the evidence that demonstrates satisfaction (a schematic sheet, a
+  source file, a test, a review report), and the verification status.
+
+  This file holds links only — no rationale (that's DESIGN.md) and no
+  requirement text (that's the requirement files). This is the only place
+  implementation/verification status is tracked; requirements stay
+  design-agnostic and status-free.
+
+  Every requirement has exactly one row here — created together with the
+  requirement (design: [], status: planned) even before any design exists. That
+  is what makes coverage visible. Validate with
+  agent_workflow_scripts/check.py.
+
+# Link schema (add under `links:`):
+#   - req: FW-001           # requirement id (FW/HW/SW/MECH-NNN)
+#     design: [DD-001]      # design decision(s) from DESIGN.md that satisfy it
+#     icd: [ICD-001]        # interface definition(s) it realizes (optional)
+#     bom: [BOM-EL-001]     # bill-of-materials item(s) that satisfy it (optional)
+#     evidence:             # where satisfaction is shown — thin pointers
+#       - electrical/BOARD/BOARD.kicad_sch   # e.g. schematic sheet N
+#     verification: inspection   # test | demonstration | inspection | analysis
+#     status: planned       # planned | wip | done | blocked
+#     notes: optional, terse
+links: []

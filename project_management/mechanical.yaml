@@ -1,0 +1,18 @@
+subsystem: Mechanical
+prefix: MECH
+description: |
+  Mechanical requirements — what the physical/mechanical design must achieve
+  (fit, mounting, clearance, ingress, thermal, material constraints). One entry
+  per capability or constraint. Design-agnostic: state the need, not the CAD
+  realization. Material, tolerances, fastening, and topology are design
+  decisions — record them in DESIGN.md and link via traceability.yaml.
+
+# Entry schema (add under `requirements:`):
+#   - id: MECH-NNN
+#     title: one line
+#     version: v1
+#     description: |        # need/constraint and why — no CAD specifics
+#       ...
+#     verification: inspection   # test | demonstration | inspection | analysis
+#     verification_env: bench    # bench | field | both
+requirements: []

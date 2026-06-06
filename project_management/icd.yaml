@@ -1,0 +1,38 @@
+description: |
+  Interface Control Document. The concrete definition of every boundary where two
+  parts of the system meet — physical/electrical (connectors) and logical
+  (protocols, data formats). Reference/contract data, NOT requirements: it says
+  what each interface IS, so both sides can be built to match and stay in sync.
+  This is the authoritative home for the contract; when it changes, both ends
+  change together and the entry is revised.
+
+  Interface *requirements* (properties that must hold — "the link shall be
+  CRC-protected", "every external connector pin shall have ESD/overvoltage
+  protection") live in the domain files (hardware.yaml, firmware.yaml,
+  software.yaml) and point at the relevant ICD-NNN via traceability.yaml.
+
+  Two common flavors:
+    - connector: a pin table (signal, direction, nominal voltage, protection) —
+      makes the "every non-ground pin carries a TVS and/or series resistor" check
+      mechanical.
+    - protocol: transport + a pointer to the authoritative byte-level contract
+      (a DESIGN.md DD, or a file the code on both ends mirrors).
+
+  Ids: ICD-NNN. Validate with agent_workflow_scripts/check.py.
+
+# Entry schema (add under `interfaces:`):
+#   - id: ICD-001
+#     name: one line
+#     type: connector | protocol | data-format | mechanical
+#     between: [side A, side B]
+#     purpose: what crosses this boundary and why
+#     # --- connector flavor: the physical/electrical pin contract ---
+#     connector: <the physical part — naming it is fine; it IS the interface>
+#     pins:
+#       - {pin: 1, signal: NAME, dir: in, nominal_V: 3.3, protection: [series_R, TVS]}
+#       - {pin: 2, signal: GND,  dir: power, protection: [GND]}
+#     # --- protocol flavor: the logical contract ---
+#     transport: <e.g. UART 115200 8N1 over USB-CDC>
+#     contract: <DESIGN.md DD, or a file both ends mirror — authoritative byte format>
+#     note: change both ends and revise together
+interfaces: []

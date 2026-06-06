@@ -1,0 +1,18 @@
+subsystem: Host / Application Software
+prefix: SW
+description: |
+  Software requirements — what the host/application software must do. One entry
+  per capability or constraint. Design-agnostic: name the behavior and why, not
+  the library, framework, or file. Implementation choices (GUI toolkit, config
+  format, libraries) are design decisions — record them in DESIGN.md and link
+  via traceability.yaml.
+
+# Entry schema (add under `requirements:`):
+#   - id: SW-NNN
+#     title: one line
+#     version: v1
+#     description: |        # behavior/constraint and why — no library names
+#       ...
+#     verification: test    # test | demonstration | inspection | analysis
+#     verification_env: bench   # bench | field | both
+requirements: []

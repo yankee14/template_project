@@ -1,0 +1,18 @@
+subsystem: Firmware
+prefix: FW
+description: |
+  Firmware requirements — what the MCU firmware must do. One entry per
+  capability or constraint. Design-agnostic: state the requirement and why,
+  never the part or the implementation. The chosen approach lives in DESIGN.md
+  and is linked by traceability.yaml; verification status lives in
+  traceability.yaml, not here.
+
+# Entry schema (add under `requirements:`):
+#   - id: FW-NNN            # stable, never reused or renumbered
+#     title: one line
+#     version: v1           # bump when the requirement's meaning changes
+#     description: |        # what must hold, and why — no parts, no how
+#       ...
+#     verification: test    # test | demonstration | inspection | analysis
+#     verification_env: bench   # bench | field | both
+requirements: []

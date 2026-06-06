@@ -1,0 +1,18 @@
+subsystem: Hardware / Electrical
+prefix: HW
+description: |
+  Hardware requirements — what the physical board must be capable of. Frame each
+  as a capability or constraint, not a part. Swapping the satisfying part
+  (different sensor, bridge, regulator) is a hardware change, not a requirement
+  change, as long as the capability still holds. The chosen part and topology
+  live in DESIGN.md; per-revision deviations live in issues_questions.yaml.
+
+# Entry schema (add under `requirements:`):
+#   - id: HW-NNN
+#     title: one line
+#     version: v1
+#     description: |        # capability/constraint and why — no specific part
+#       ...
+#     verification: inspection   # test | demonstration | inspection | analysis
+#     verification_env: bench    # bench | field | both
+requirements: []
