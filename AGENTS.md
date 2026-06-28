@@ -53,9 +53,14 @@ an ambiguous requirement, and ambiguity in the spec is the most expensive kind.
       File or update an entry, then fix. Never fix silently.
 - Per-directory READMEs: `firmware/` `electrical/` `software/` `mechanical/`
   `doc/`.
-- `inbox/` — catch-all drop zone, **undefined by design**. The user drops
-  anything that doesn't fit elsewhere; ask how to parse it or where it belongs,
-  then move it there. Gitignored; nothing in it is committed.
+- `inbox/` — drop zone for any project material the user wants studied, sorted,
+  or discarded. Gitignored, never committed. Classify each file and route:
+  receipts/invoices → `purchasing/log.md` (procedure `purchasing.md`); datasheets
+  → `doc/datasheet/<category>/` (move the PDF **and** create its `.md` sidecar —
+  see `doc/README.md`); requirements/ideas → the requirements procedure
+  (`requirements_issues_questions.md`); parts lists → `BOM.md`; anything ambiguous
+  → ask. Process every file except `.gitkeep`; delete only after it is fully
+  recorded or the user says to discard it.
 - `purchasing/log.md` — order and spend record.
 
 ## Repo conventions
