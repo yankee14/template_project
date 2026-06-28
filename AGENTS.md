@@ -1,8 +1,9 @@
 # AGENTS.md
 
-Agent rules for this repo. Project-specific facts (pin tables, toolchain
-versions, part numbers, revision status) live in per-directory READMEs near
-their domain — load when relevant, do not duplicate here.
+Agent rules for this repo (Claude Code and other coding agents).
+Project-specific facts (pin tables, toolchain versions, part numbers, revision
+status) live in per-directory READMEs near their domain — load when relevant,
+do not duplicate here.
 
 This is a project template: a fixed structure for projects mixing electronics,
 firmware, software, mechanical CAD, and requirements. Most directories ship
@@ -64,13 +65,17 @@ an ambiguous requirement, and ambiguity in the spec is the most expensive kind.
 - After editing anything under `project_management/`, run
   `project_management/agent_workflow_scripts/check.py` from the repo root and fix
   every ERROR before committing — it validates the requirement ↔ design ↔
-  traceability links.
-- Never `git push`. User pushes. Agent may stage, commit, branch, rebase
-  locally.
+  traceability links. Warnings are advisory.
+- Commit at regular logical intervals with reasonably detailed messages; set the
+  agent name + type as co-author. Never `git push` — the user does that. Agent
+  may stage, commit, branch, rebase locally.
 - Agent launched from repo root. Use relative paths. Avoid `cd` — prefer flags
   that target a directory (`git -C`, `--prefix`) or `pushd <relative>` / `popd`.
+- `sudo`: never run it. Print the exact command, stop, and wait for the user to
+  run it and paste the result.
 - Don't install Debian/apt packages; stop and ask. If one is missing mid-run,
   ask the user to install it, then re-check PATH before assuming it's absent.
+- When compiling, cap CPU at 92%, or (N − 2) cores when N > 2.
 - Python interpreter discipline. Never invoke system `python`/`python3`/`pip`
   for project work — always a venv interpreter (`<venv>/bin/python`,
   `<venv>/bin/pip` or `<venv>/bin/python -m pip`). Bootstrap chain: the repo-root

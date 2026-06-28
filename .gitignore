@@ -278,3 +278,15 @@ inbox/*
 ####
 # END INBOX
 ####
+
+####
+# AGENT TOOLING
+####
+
+# Claude Code: personal, per-machine permissions + state — never commit.
+# A tracked .claude/settings.json (shared project config) is fine to commit.
+.claude/settings.local.json
+
+####
+# END AGENT TOOLING
+####

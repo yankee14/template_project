@@ -13,5 +13,6 @@ touch system pip. The root `.venv/` is for project-servicing tooling only — no
 for any app here.
 
 Software requirements live in `project_management/software.yaml` (prefix SW);
-implementation choices (GUI toolkit, config format, libraries) go in
-`project_management/DESIGN.md`.
+implementation choices (GUI toolkit, config format, libraries) are design
+decisions — record them in `project_management/DESIGN.md` and link via
+`project_management/traceability.yaml`.
