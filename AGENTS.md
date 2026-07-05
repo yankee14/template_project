@@ -122,9 +122,11 @@ an ambiguous requirement, and ambiguity in the spec is the most expensive kind.
 
 - Before reading a source file, check whether it was already read this session;
   if so, reference the earlier read. Re-read only if you or a tool modified it,
-  the user says it changed, or a command plausibly changed it (formatter,
-  codegen, CubeMX regen, `git checkout`/`pull`). Prefer ranged reads for large
-  files. Never re-read just to "refresh context."
+  the user says it changed, a command plausibly changed it (formatter, codegen,
+  CubeMX regen, `git checkout`/`pull`), or context compaction/summarization
+  happened since the read — then ranged re-reads of files about to be edited
+  are allowed. Prefer ranged reads for large files. Never re-read just to
+  "refresh context."
 
 ## PLAN.md (multi-phase dev)
 
@@ -136,7 +138,9 @@ ceiling forces a split, never a merge. Two budgets: disposable phase **subagents
 may run warm; the **orchestrator** persists across the wave (handles outcomes —
 collect, verify, commit, gate; writes no feature code itself) and stays cool.
 Commit per phase; run the integration gate per wave; clear the orchestrator at a
-wave seam when the next wave runs inline. Full rules:
+wave seam when the next wave runs inline. After final verification the plan
+archives to `plans/archive/` (durable — never delete); an independent review
+(`code_review.md`) follows in clean context. Full rules:
 `agent_workflow_scripts/plan_workflow.md`. Do NOT wrap single-file edits, one-shot
 commands, procedure-driven tasks, or read-only work in a `PLAN.md`.
 
@@ -151,6 +155,7 @@ PLAN.md workflow.
 | `requirements_issues_questions.md` | User reports a bug, broken behavior, missing feature, or deviation — load this first, then read `issues_questions.yaml` before any fix work; also load when adding/editing requirements, design, traceability, issues, or questions |
 | `check.py` | Validating `project_management/` integrity (after edits, before commit) |
 | `plan_workflow.md` | Authoring or executing a `PLAN.md` |
+| `code_review.md` | Independent review of `software/`/`firmware/` code — after a plan's final verification, or when the user asks for a code review/audit |
 | `purchasing.md` | Processing receipts/invoices from `inbox/` into `purchasing/log.md` |
 | `kicad_schematic_drafting.md` | Drawing or editing a `.kicad_sch` — placing symbols, wiring, values, drafting style. Never read a `.kicad_sch` directly; use the digest (`kicad_sch.py <file>`) |
 | `schematic_review.md` | Reviewing a KiCad schematic |

@@ -35,6 +35,8 @@ software/APP/.venv/bin/python -m APP
 | `doc/literature/` | Application notes and reference literature |
 | `purchasing/` | Order and spend log |
 | `inbox/` | Drop zone for files to process (gitignored) |
+| `plans/archive/` | Verified `PLAN.md` records (durable, never deleted) |
+| `reviews/archive/` | Closed code-review cycles |
 | `ROADMAP.md` | Future wants and needs |
 | `AGENTS.md` | Agent operating rules |
 

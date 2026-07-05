@@ -47,9 +47,11 @@ Do NOT apply when:
 
 Always:
 
-- Use the strongest model at high / max effort.
+- Use the strongest model at high / max effort. If the current model/effort
+  does not match, say so and stop before proceeding.
 - Size each phase to land **comfortably under** one medium-effort executor
-  context, with margin for the end-of-phase sanity check, the commit, and
+  context — planned reads + edits + test runs should consume no more than ~half
+  the executor's window — with margin for the sanity check, the commit, and
   overshoot. The budget is a **ceiling, not a target**: cohesion sets the phase;
   the ceiling only forces a **split** when a coherent unit won't fit — never a
   **merge** to "fill" a window. A phase that lands light is a clean cheap commit,
@@ -58,12 +60,17 @@ Always:
   before an inline phase. Running near the ceiling is the failure mode: quality
   degrades as the window fills, and overshoot kills the phase before its commit.
 - Markdown checkboxes (`- [ ]` / `- [x]`), never checkmark characters.
-- Annotate each phase with: files touched; dependencies on other phases; the
-  interface/contract later phases can assume; parallelization suggestions (only
-  across phases with disjoint file sets and clear contracts); and a
-  context-budget estimate (file reads, edit volume, test runs) as headroom under
-  the ceiling — split any phase whose estimate crowds the ceiling. A phase tagged
-  "top of one context" is a split candidate, not a target hit.
+- Annotate each phase with: files touched; known edit sites as
+  `path:Lstart-Lend` citations for all existing code the phase touches (omit
+  only for phases that create new files); dependencies on other phases; the
+  interface/contract later phases can assume; executor — medium effort by
+  default, marked for the strongest model when concurrency, subtle algorithms,
+  or cross-cutting refactors resist full specification; parallelization
+  suggestions (only across phases with disjoint file sets and clear contracts);
+  and a context-budget estimate (file reads full vs. ranged, edit volume, test
+  runs) as headroom under the ceiling — split any phase whose estimate crowds
+  the ceiling. A phase tagged "top of one context" is a split candidate, not a
+  target hit.
 - Group the phases into waves (the parallel sets, from the dependency DAG) and
   include the wave table + DAG in the plan. A wave's phases must have disjoint
   file sets and depend only on already-merged contracts.
@@ -71,7 +78,9 @@ Always:
   tests for new module boundaries, a regression test for every bug fix.
 - The first phase is the skeleton (see "Phases and waves"): it creates all source
   dirs + empty files, freezes the contracts every later phase imports, and
-  installs + pins every dependency the later phases declare.
+  installs + pins every dependency the later phases declare. In an existing
+  project, phase 1 creates only the new dirs/files the plan introduces and
+  freezes only the new cross-phase contracts.
 - Keep each phase preamble to 1–2 lines plus a link to the relevant requirement
   (e.g. `project_management/firmware.yaml#FW-005`). Don't restate requirement
   text. Never trim the load-bearing parts: the known-edit-site list, the
@@ -79,8 +88,10 @@ Always:
 
 ## Executing PLAN.md
 
-Use a medium-effort model for the executor. Execute the plan one wave at a time,
-in DAG order.
+Use a medium-effort model for the executor, unless the phase's executor
+annotation says otherwise. If the current model/effort does not match the
+phase's requirement, say so and stop before proceeding. Execute the plan one
+wave at a time, in DAG order.
 
 **Two budgets, not one.** A phase **subagent** is disposable — one phase, a fresh
 window, then gone — so it may run warm. The **orchestrator** persists across the
@@ -116,13 +127,19 @@ and discarded.
 ### Before each phase: sanity-check
 
 1. read the entire phase;
-2. read all files relevant to the phase;
+2. read all files relevant to the phase (ranged reads for large files — the
+   cited ranges plus surrounding context suffice for step 3);
 3. for every `path:Lstart-Lend` citation, verify the cited lines still match what
    the plan claims (earlier phases may have shifted line numbers);
 4. report findings under `Ambiguities`, `Missing details`, `Conflicts with
    existing code`, `Stale line references`. If all four are empty, say so;
 5. if any header has content, stop and let the user decide; if all four are
    empty, proceed without waiting.
+
+In a multi-phase wave, the orchestrator runs this check for **every** phase of
+the wave **before spawning any subagent** — ranged reads keep it cheap, and a
+failed check must stop the wave before it starts, not after sibling phases are
+mid-write.
 
 Follow the plan exactly, except where the sanity check surfaced issues the user
 has not resolved. Move deferred tasks to a sensible later phase, or a new phase
@@ -135,8 +152,10 @@ These three are separate actions — do not bundle them.
 
 - **Commit after each phase.** Check `.gitignore` first. When checking off an
   item, append `→ path/to/file:symbol` (prefer symbol over line number — earlier
-  phases shift lines); only check off after its tests pass. Update the phase
-  checkboxes so the commit captures them. One commit per phase keeps each commit
+  phases shift lines; citations are point-in-time either way, final verification
+  re-derives them); only check off after its tests pass. Items with no testable
+  behavior (skeleton, docs, config) are checked off on completion and annotated
+  `(no test)`. Update the phase checkboxes so the commit captures them. One commit per phase keeps each commit
   mapped to one requirement set + its tests (clean bisect, clean revert).
 - **Wave gate.** When every phase in the wave is committed, run `ruff check .` +
   the FULL `pytest` once. This is the integration gate: parallel phases pass in
@@ -158,13 +177,31 @@ These three are separate actions — do not bundle them.
   phase's `Read first:` list — state lives in the file and the commits, never in
   context.
 
-Once all waves are complete and committed, run the final verification, then clear
-`PLAN.md` (don't commit the clearing).
+Once all waves are complete and committed, run the final verification. Never
+clear or archive `PLAN.md` before final verification passes.
 
 ## Final verification
 
-Clean context, run by the planner model:
+Clean context, run by the planner model at planning effort (say so and stop on
+mismatch):
 
 - For each checkbox in `PLAN.md`, cite the file + line range where implemented,
-  or flag it unverified.
+  or flag it unverified. Re-derive locations rather than trusting the checkbox
+  `→` citations — those are point-in-time and later phases shift lines.
 - Compare the original requirements against the implemented source; flag gaps.
+- Once every checkbox verifies and no requirement gaps remain: append a
+  `## Verification <YYYY-MM-DD>` section to `PLAN.md` recording the verified
+  per-checkbox citations and the requirement-gap results, then move the file to
+  `plans/archive/PLAN-<YYYY-MM-DD>.md` (don't commit the move).
+- The archived plan is a durable record: the independent review consumes it
+  (requirements-coverage "Planned" column, contract conformance). Never delete
+  files from `plans/archive/`.
+
+## Independent review
+
+After final verification, in clean context, follow
+`agent_workflow_scripts/code_review.md`. Final verification is run by the
+planner on its own plan and is not independent scrutiny — the review re-derives
+requirement coverage itself. Per-cycle state lives in `REVIEW_PLAN.md` +
+`REVIEW_FINDINGS.md` at repo root; at cycle closure both move to
+`reviews/archive/<YYYY-MM-DD>/`.

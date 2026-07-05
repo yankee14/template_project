@@ -108,7 +108,9 @@ engineer or you have a concern about a design decision or anything else.
 
 1. Remove it from `open`.
 2. Add one terse line to `resolved` (newest first): date, id, statement →
-   resolution, commit hash if any.
+   resolution, commit hash if any. A fix's hash exists only after the fix
+   commit — record it in an immediate follow-up commit (e.g. `docs: log fix in
+   issues_questions.yaml`).
 3. If the resolution changes intended behavior, update the requirement and bump
    its `version`. If it changes a design decision, update the DD (mark the old
    one `superseded by DD-NNN`).
