@@ -152,8 +152,9 @@ PLAN.md workflow.
 | `check.py` | Validating `project_management/` integrity (after edits, before commit) |
 | `plan_workflow.md` | Authoring or executing a `PLAN.md` |
 | `purchasing.md` | Processing receipts/invoices from `inbox/` into `purchasing/log.md` |
+| `kicad_schematic_drafting.md` | Drawing or editing a `.kicad_sch` — placing symbols, wiring, values, drafting style. Never read a `.kicad_sch` directly; use the digest (`kicad_sch.py <file>`) |
 | `schematic_review.md` | Reviewing a KiCad schematic |
 | `drc_erc_waivers.md` | Processing ERC/DRC reports |
 | `ioc_schematic_crosscheck.md` | Crosschecking an `.ioc` against the schematic |
 | `stencil_reuse_check.md` | Deciding if an SMD stencil can be reused across revisions |
-| `kicad-export.sh`, `kicad-export-bom.sh`, `kicad-export-gerbers.sh`, `kicad-erc.sh`, `ioc-crosscheck.sh`, `stencil-diff.sh` | Called by the procedures above — not directly |
+| `kicad-export.sh`, `kicad-export-bom.sh`, `kicad-export-gerbers.sh`, `kicad-erc.sh`, `kicad-sch-verify.sh`, `kicad_sch.py`, `ioc-crosscheck.sh`, `stencil-diff.sh` | Called by the procedures above — not directly |
